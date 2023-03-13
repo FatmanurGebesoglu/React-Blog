@@ -1,18 +1,48 @@
 import './create.css';
-import { useState } from 'react';
-
+import { useState, useRef, useEffect } from 'react';
+import { useFetch } from '../../hook/useFetch';
 import React from 'react'
+import {useHistory} from 'react-router-dom';
 
 export default function Create() {
+
+  const {postData,data,error}=useFetch('http://localhost:5000/bloglar', 'POST');
 
   const [baslik, setBaslik] = useState("");
   const [icerik, setIcerik] = useState("");
   const [okunmaSuresi, setOkunmaSuresi] = useState("");
 
+  const [yeniKategori, setYenikategori]= useState('');
+  const [kategoriler,setkategori]= useState([]);
+  const kategoriInput= useRef(null);
+
+  const history= useHistory();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(baslik, icerik, okunmaSuresi);
+    console.log(baslik, icerik, okunmaSuresi,kategoriler);
+
+    postData({baslik,kategoriler,icerik,okunmaSuresi: okunmaSuresi + ' dakika'})
   }
+
+  const handleAdd=(e)=>{
+    e.preventDefault()
+    const yKat= yeniKategori.trim();
+
+    if(yKat && !kategoriler.includes(yKat) ){
+      setkategori(oKat=>[...oKat,yeniKategori])
+    }
+
+
+    setYenikategori('')
+    kategoriInput.current.focus()
+  }
+
+  useEffect(()=> {
+      if(data){
+        history.push('/')
+      }
+  },[data]);
 
   return (
     <div className='create'>
@@ -28,6 +58,17 @@ export default function Create() {
         </label>
 
         {/* kategoriler gelecek */}
+
+        <label>
+          <span>Yazı Kategorileri:</span>
+          <div className='categories'>
+              <input type="text" onChange={(e)=>setYenikategori(e.target.value)} value={yeniKategori} ref={kategoriInput}/>
+              <button onClick={handleAdd} className="btnAdd btn">Ekle</button>
+          </div>
+        </label>
+
+        <p>Kategoriler: <span className='list'>{kategoriler.map(i => <em key={i}>{i}, </em>)}</span></p>
+
 
         <label>
           <span>
