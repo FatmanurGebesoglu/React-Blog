@@ -4,6 +4,10 @@ import { useFetch } from '../../hook/useFetch';
 import React from 'react'
 import {useHistory} from 'react-router-dom';
 
+import { db } from '../../firebase/config';
+import {collection,addDoc} from 'firebase/firestore'
+import { async } from '@firebase/util';
+
 export default function Create() {
 
   const {postData,data,error}=useFetch('http://localhost:5000/bloglar', 'POST');
@@ -18,11 +22,25 @@ export default function Create() {
 
   const history= useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(baslik, icerik, okunmaSuresi,kategoriler);
+    //console.log(baslik, icerik, okunmaSuresi,kategoriler);
 
-    postData({baslik,kategoriler,icerik,okunmaSuresi: okunmaSuresi + ' dakika'})
+    //postData({baslik,kategoriler,icerik,okunmaSuresi: okunmaSuresi + ' dakika'})
+
+    const doc ={baslik,kategoriler,icerik,okunmaSuresi: okunmaSuresi + ' dakika'}
+
+    const ref=collection(db,'bloglar');
+
+    try{
+      await addDoc(ref,{
+        ...doc
+      })
+      history.push('/')
+    }catch(err){
+      console.log(err);
+    }
+
   }
 
   const handleAdd=(e)=>{
@@ -38,11 +56,11 @@ export default function Create() {
     kategoriInput.current.focus()
   }
 
-  useEffect(()=> {
-      if(data){
-        history.push('/')
-      }
-  },[data]);
+  // useEffect(()=> {
+  //     if(data){
+  //       history.push('/')
+  //     }
+  // },[data]);
 
   return (
     <div className='create'>
