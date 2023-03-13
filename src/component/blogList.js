@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom'
+import { useTheme } from '../hook/useTheme'
 import './blogList.css'
 
 export default function BlogList({bloglar}) {
+
+    const {mode}=useTheme();
 
     if(bloglar.length==0){
         return <div className='error'>Aranan yazı bulunamadı...</div>
@@ -9,7 +12,7 @@ export default function BlogList({bloglar}) {
     return (
         <div className="blog-list">
             {bloglar.map(blog => (
-                <div key={blog.id} className="card">
+                <div key={blog.id} className={`card ${mode}`}>
                 <h3>{blog.baslik}</h3>
                 <p>{blog.okunmaSuresi}</p>
                 <div>{blog.icerik.substring(0, 100)}...</div>

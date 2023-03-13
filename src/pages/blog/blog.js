@@ -2,16 +2,19 @@ import './blog.css';
 import { useParams } from 'react-router-dom';
 import { useFetch } from '../../hook/useFetch';
 import React from 'react'
+import { useTheme } from '../../hook/useTheme';
 
 
 export default function Blog() {
   const {id} = useParams();
   const url = 'http://localhost:5000/bloglar/'+id;
 
+  const {mode}=useTheme();
+
   const {hata,yukleniyor, data:blog}= useFetch(url);
 
   return (
-    <div className='blog'>
+    <div className={`blog ${mode}`}>
       {hata && <p className='error'>{hata}</p>}
       {yukleniyor && <p className='loading'>Yükleniyor...</p>}
       {blog && (

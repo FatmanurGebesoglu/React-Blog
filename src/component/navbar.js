@@ -6,10 +6,10 @@ import SearchBar from './searchBar';
 import { useTheme } from '../hook/useTheme';
 
 export default function Navbar() {
-  const {bgColor}=useTheme();
+  const {bgColor,changeColor}=useTheme();
   return (
     <div className='navbar' style={{backgroundColor:bgColor}}>
-        <nav>
+        <nav onClick={()=>changeColor('#c44569')}>
             <Link to="/" className='brand'>
                 <h1>Fatmanur</h1>
             </Link>
